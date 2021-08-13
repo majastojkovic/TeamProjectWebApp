@@ -10,6 +10,8 @@ const ejs = require('ejs');
 
 const app = express();
 
+// Passport Config
+require('./config/passport')(passport);
 
 //app.use(express.static("public"));
 //  app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,7 +56,12 @@ app.use(
   })
 );
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash());
+
 
 // Global variables
 app.use(function(req, res, next) {
@@ -66,16 +73,3 @@ app.use(function(req, res, next) {
 
 
 app.use('/', require('./routes/users.js'));
-
-/*
-const student1 = new Student({
-  indexNumber:1,
-  name:"Ana",
-  surname:"Peric",
-  email:"anaperic@gmail.com",
-  password:"anaperic",
-  role:"student"
-});
-
-student1.save();
-*/
