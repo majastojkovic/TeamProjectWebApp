@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
-    const studentSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+    const studentSchema = new Schema({
 
       indexNumber: {
         type: Number,

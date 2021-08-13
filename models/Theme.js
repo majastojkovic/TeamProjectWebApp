@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const themeSchema = new mongoose.Schema({
+const themeSchema = new Schema({
 //title je unique
   title:{
     type: String,
@@ -18,7 +19,8 @@ const themeSchema = new mongoose.Schema({
   },
 
   professor: {
-    type: professorSchema,
+    type: Schema.ObjectId,
+    ref: "Professor", 
     require: true
   },
 
@@ -28,9 +30,15 @@ const themeSchema = new mongoose.Schema({
 
   },
 
-  teamsApplied: [teamSchema],
+  teamsApplied: [{
+    type: Schema.ObjectId,
+    ref: "Team"
+  }],
 
-  teamApproved: teamSchema
+  teamApproved: {
+    type: Schema.ObjectId,
+    ref: "Team"
+  }
 
 });
 

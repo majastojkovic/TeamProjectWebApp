@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const professorSchema = new mongoose.Schema({
+const professorSchema = new Schema({
 
   id: {
     type: Number,
@@ -32,7 +33,10 @@ const professorSchema = new mongoose.Schema({
     require: true
   },
 
-  listOfThemes: [themeSchema]
+  listOfThemes: [{
+    type: Schema.ObjectId,
+    ref: "Theme"
+  }]
 
 });
 

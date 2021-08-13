@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const teamSchema = new mongoose.Schema({
+const teamSchema = new Schema({
 //name je unique
   name: {
     type: String,
@@ -12,9 +13,15 @@ const teamSchema = new mongoose.Schema({
     require: true
   },
 
-  chosenTheme: themeSchema,
+  chosenTheme: {
+    type: Schema.ObjectId,
+    ref: "Theme"
+  },
 
-  members: [studentSchema],
+  members: [{
+    type: Schema.ObjectId,
+    ref: "Student"
+  }],
 
 //sprecava da tim aplicira vise puta na temu
   isApplied: {
