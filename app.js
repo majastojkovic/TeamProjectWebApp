@@ -71,5 +71,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-app.use('/', require('./routes/users.js'));
+// Routes
+app.use('/', require('./routes/index.js'));
+app.use('/users', require('./routes/users.js'));
+app.use('/professor', require('./routes/professor.js'));
+app.use('/student', require('./routes/student.js'));

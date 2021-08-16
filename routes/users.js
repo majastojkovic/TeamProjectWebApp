@@ -3,16 +3,14 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const mongoose = require('mongoose');
 
-const {
-  ensureAuthenticated
-} = require('../config/auth');
+const { ensureAuthenticated } = require('../config/auth');
 
-const router = express.Router();
 const Student = require('../models/Student.js');
 const Professor = require('../models/Professor.js');
+const router = express.Router();
 
 //Welcome Page
-router.get('/', (req, res) => res.render('welcome'));
+//router.get('/', (req, res) => res.render('welcome'));
 
 //Register Page
 router.get('/register', (req, res) => res.render('register'));
@@ -20,9 +18,9 @@ router.get('/register', (req, res) => res.render('register'));
 // Login Page
 router.get('/login', (req, res) => res.render('login'));
 
-router.get('/studentHome', ensureAuthenticated, (req, res) => res.render('studentdashboard'));
+//router.get('/studentHome', ensureAuthenticated, (req, res) => res.render('studentdashboard'));
 
-router.get('/professorHome', ensureAuthenticated, (req, res) => res.render('professordashboard'));
+//router.get('/professorHome', ensureAuthenticated, (req, res) => res.render('professordashboard'));
 
 
 
@@ -110,7 +108,7 @@ router.post('/register', (req, res) => {
                 .save()
                 .then(user => {
                   //  req.flash('success_msg', 'You are now registered and can log in.');
-                  res.redirect('/studentHome');
+                  res.redirect('/users/login');
                 })
                 .catch(err => console.log(err));
             });
@@ -157,7 +155,7 @@ router.post('/register', (req, res) => {
                 .save()
                 .then(user => {
                   //  req.flash('success_msg', 'You are now registered and can log in.');
-                  res.redirect('/professorHome');
+                  res.redirect('/users/login');
                 })
                 .catch(err => console.log(err));
             });
@@ -177,20 +175,22 @@ router.post('/login', (req, res, next) => {
       // User exists
       // Loged User is student
       passport.authenticate('local', {
-        successRedirect: '/studentHome',
-        failureRedirect: '/login',
+        successRedirect: '/student/studentHome',
+        failureRedirect: '/users/login',
         failureFlash: true
       })(req, res, next);
     } else {
       Professor.findOne({
         email: req.body.email
       }).then(user1 => {
+        if(user1){
         // Loged User is professor
         passport.authenticate('local', {
-          successRedirect: '/professorHome',
-          failureRedirect: '/login',
+          successRedirect: '/professor/professorHome',
+          failureRedirect: '/users/login',
           failureFlash: true
         })(req, res, next);
+      }
       })
     }
   });
