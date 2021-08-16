@@ -1,0 +1,14 @@
+.body{
+  background-color: blue;
+}
+
+
+.listOfRequests{
+  width:50%;
+  height: 25%;
+}
+
+.listOfTheme{
+  width: 100px;
+  height: 200px;
+}
