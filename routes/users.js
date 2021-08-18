@@ -107,7 +107,7 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  //  req.flash('success_msg', 'You are now registered and can log in.');
+                  req.flash('success_msg', 'You are now registered.');
                   res.redirect('/users/login');
                 })
                 .catch(err => console.log(err));
@@ -154,7 +154,7 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  //  req.flash('success_msg', 'You are now registered and can log in.');
+                  req.flash('success_msg', 'You are now registered.');
                   res.redirect('/users/login');
                 })
                 .catch(err => console.log(err));
@@ -174,7 +174,7 @@ router.post('/login', (req, res, next) => {
     if (user) {
       // User exists
       // Loged User is student
-      passport.authenticate('local', {
+      passport.authenticate('localStudent', {
         successRedirect: '/student/studentHome',
         failureRedirect: '/users/login',
         failureFlash: true
@@ -185,12 +185,19 @@ router.post('/login', (req, res, next) => {
       }).then(user1 => {
         if(user1){
         // Loged User is professor
-        passport.authenticate('local', {
+        passport.authenticate('localProfessor', {
           successRedirect: '/professor/professorHome',
           failureRedirect: '/users/login',
           failureFlash: true
         })(req, res, next);
       }
+      /*else {
+        passport.authenticate('local', {
+       successRedirect: '/dashboard',
+       failureRedirect: '/users/login',
+       failureFlash: true
+     })(req, res, next);
+   }*/
       })
     }
   });
@@ -201,7 +208,7 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You are logged out');
-  res.redirect('/');
+  res.redirect('/users/login');
 });
 
 
