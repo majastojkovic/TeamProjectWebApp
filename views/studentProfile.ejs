@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarColor03">
+
+      <ul class="navbar-nav me-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" href="/student/studentHome">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+
+      <h1 class="text-center mb-3">Student Profile</h1>
+
+      <form action="/student/leaveTeam" method="POST">
+
+        <div class="form-group">
+
+          <dl class="dl-horizontal">
+
+            <dt>Name: </dt>
+            <dd><%= student.name %></dd>
+
+            <dt>Surname: </dt>
+            <dd><%= student.surname %></dd>
+
+            <dt>Email: </dt>
+            <dd><%= student.email %></dd>
+
+         <% if (student.teamName != "") { %>
+              <dt>Team Name: </dt>
+              <dd><%= student.teamName %></dd>
+         <% } %>
+
+
+          </dl>
+
+          <span>
+            <a style="margin:10px" href="/student/studentHome">Go Back</a>
+            <% if (student.teamName != "") { %>
+            <button type="submit" class="btn btn-outline-primary">Leave Team</button>
+            <% } %>
+          </span>
+
+      </form>
+
+
+    </div>
+  </div>
+</div>

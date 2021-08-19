@@ -18,8 +18,11 @@ require('./config/passport')(passport);
 app.use(express.urlencoded({
   extended: false
 }));
+
 //Load models
 const Student = require('./models/Student.js');
+const Theme = require('./models/Theme.js');
+const Team = require('./models/Team.js');
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
@@ -32,7 +35,8 @@ const db = require('./config/keys').mongoURI;
 mongoose
   .connect(db, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
