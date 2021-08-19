@@ -65,7 +65,7 @@ app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('/professor', require('./routes/professor.js'));
 app.use('/student', require('./routes/student.js'));
-
+app.use('/index', require('./routes/index.js'));
 
 
 app.listen(3000, function() {

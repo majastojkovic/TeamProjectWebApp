@@ -4,5 +4,5 @@ const { ensureAuthenticatedStudent } = require('../config/auth');
 const { ensureAuthenticated } = require('../config/auth');
 // Professor Dashboard
 router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => res.render('studentdashboard'));
-
+router.get('/student', ensureAuthenticated, (req, res) => res.render('studentdashboard'));
 module.exports = router;

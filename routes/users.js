@@ -9,6 +9,9 @@ const Student = require('../models/Student.js');
 const Professor = require('../models/Professor.js');
 const router = express.Router();
 
+const indexNumber=0;
+this.indexNumber++;
+console.log(indexNumber);
 //Welcome Page
 //router.get('/', (req, res) => res.render('welcome'));
 
@@ -25,7 +28,8 @@ router.get('/login', (req, res) => res.render('login'));
 
 
 // Register
-router.post('/register', (req, res) => {
+router.post('/register', (req, res, next) => {
+  const teamName=null;
   const {
     name,
     surname,
@@ -94,6 +98,7 @@ router.post('/register', (req, res) => {
             surname,
             email,
             password,
+            teamName,
             role
           });
 
@@ -107,8 +112,11 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  req.flash('success_msg', 'You are now registered.');
-                  res.redirect('/users/login');
+                  passport.authenticate('localStudent', {
+                    successRedirect: '/student/studentHome',
+                    failureRedirect: '/users/login',
+                    failureFlash: true
+                  })(req, res, next);
                 })
                 .catch(err => console.log(err));
             });
@@ -154,8 +162,11 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  req.flash('success_msg', 'You are now registered.');
-                  res.redirect('/users/login');
+                  passport.authenticate('localProfessor', {
+                    successRedirect: '/professor/professorHome',
+                    failureRedirect: '/users/login',
+                    failureFlash: true
+                  })(req, res, next);
                 })
                 .catch(err => console.log(err));
             });

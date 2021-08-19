@@ -1,5 +1,4 @@
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
 
@@ -10,18 +9,48 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/professor/professorProfile">Profile</a>
+          <a class="nav-link" href="/professor/professorProfile">My profile</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-secondary" href="/users/logout">Logout</a>
+          <a class="nav-link" href="/professor/createNewTheme">Create New Theme</a>
         </li>
-
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
       </ul>
-      </div>
+    </div>
   </div>
 </nav>
 
+<br>
+
+<p class="text-primary">All themes</p>
+<form class="d-flex">
+        <input class="form-control me-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+</form>
 
 
-<p class="lead mb-3"><%= professor %> </p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<table id="professorThemesTable" class="table table-hover">
+  <thead>
+    <% let headers = ['Title', 'Description', 'Expiry Date']; %>
+    <% headers.forEach(headerText => { %>
+        <th scope="col"><%= headerText %></th>
+    <% }); %>
+  </thead>
+  <tbody>
+      <% themes.forEach(function(theme) { %>
+          <tr class="table-light">
+
+            <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
+            <td><%= theme.description %></td>
+            <td><%= theme.expiryDate %></td>
+        </tr>
+
+    <% }); %>
+
+
+  </tbody>
+</table>
+
+<!-- <p class="lead mb-3"><%= professor %> </p> -->
