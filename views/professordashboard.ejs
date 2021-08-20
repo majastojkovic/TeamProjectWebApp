@@ -9,6 +9,9 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
+          <a class="nav-link" href="/professor/professorHome">Home</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/professor/professorProfile">My profile</a>
         </li>
         <li class="nav-item">
@@ -25,30 +28,31 @@
 <br>
 
 <p class="text-primary">All themes</p>
-<form class="d-flex">
-        <input class="form-control me-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
+<form  action="/professor/search" method="POST">
+        <input id= "search" name="searchText" class="form-control me-sm-2" type="text" placeholder="Search">
+        <button type="submit" class="btn btn-primary">Search</button>
 </form>
 
 
 <table id="professorThemesTable" class="table table-hover">
   <thead>
-    <% let headers = ['Title', 'Description', 'Expiry Date']; %>
+    <% let headers = ['Title', 'Professor', 'Description']; %>
     <% headers.forEach(headerText => { %>
         <th scope="col"><%= headerText %></th>
     <% }); %>
   </thead>
   <tbody>
-      <% themes.forEach(function(theme) { %>
-          <tr class="table-light">
-
-            <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
-            <td><%= theme.description %></td>
-            <td><%= theme.expiryDate %></td>
-        </tr>
-
+      <tr class="table-light">
+        <% themes.forEach(function(theme) { %>
+          <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
+          <% professors.forEach(function (prof) { %>
+            <%  if(prof._id.equals(theme.professor)) { %>
+              <td><%= prof.name %></td>
+            <% } %>
+          <%  }); %>
+        <td><%= theme.description  %></td>
+          </tr>
     <% }); %>
-
 
   </tbody>
 </table>

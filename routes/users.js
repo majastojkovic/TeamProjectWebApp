@@ -9,9 +9,6 @@ const Student = require('../models/Student.js');
 const Professor = require('../models/Professor.js');
 const router = express.Router();
 
-const indexNumber=0;
-this.indexNumber++;
-console.log(indexNumber);
 //Welcome Page
 //router.get('/', (req, res) => res.render('welcome'));
 
@@ -143,13 +140,15 @@ router.post('/register', (req, res, next) => {
             role
           });
         } else {
+          let listOfThemes = [];
           const newUser = new Professor({
             errors,
             name,
             surname,
             email,
             password,
-            role
+            role,
+            listOfThemes
           });
 
           // Hash Password

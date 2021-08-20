@@ -5,7 +5,7 @@
       <%- include('partials/messages'); %>
       <form action="/professor/createTheme" method="POST">
         <div class="form-group">
-          <label for="title">Title</label>
+          <label for="title">Title:</label>
           <input
             type="text"
             id="title"
@@ -15,16 +15,19 @@
           />
         </div>
         <div class="form-group">
-          <label for="description" class="form-label mt-4">Description</label>
+          <label for="description" class="form-label mt-4">Description:</label>
           <textarea class="form-control" id="description" name="description" rows="3" style="margin-top: 0px; margin-bottom: 0px; height: 83px;"></textarea>
         </div>
         <br>
-        <input id="dateTimePicker" name="expiryDate"></input>  
-        <script type="text/javascript">
+        <label for="expiryDate" class="form-label mt-4">Date of expiry:</label>
+        <br>
+        <input id="expiryDate" type="datetime-local" name="expiryDate"style="margin-top: 0px; margin-bottom: 0px; height: 83px;"></input>
+<!-- <script type="text/javascript">
             $(document).ready(function() {
                 $('#dateTimePicker').datetimepicker();
             });
-        </script>
+        </script> -->
+        <br>
         <button type="submit" class="btn btn-primary btn-block">Create</button>
       </form>
     </div>
