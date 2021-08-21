@@ -32,7 +32,8 @@ const db = require('./config/keys').mongoURI;
 mongoose
   .connect(db, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
@@ -76,3 +77,4 @@ app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('/professor', require('./routes/professor.js'));
 app.use('/student', require('./routes/student.js'));
+app.use('/team', require('./routes/team.js'));

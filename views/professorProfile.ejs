@@ -1,21 +1,54 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Professor Profile</title>
-    <link rel="stylesheet"  src="/profileProfessor">
-  </head>
-  <body>
-    <h1>Professor profile</h1>
-    <div class="infoProfessor">
+<h2>Professor profile</h2>
+  <div class="infoProfessor">
+    <div class="name">
+      <p class="lead mb-3">Name: <%= professor.name %></p>
+    </div>
+    <div class="surname">
+      <p class="lead mb-3">Surname: <%= professor.surname %></p>
+    </div>
+    <div class="email">
+      <p class="lead mb-3">Email: <%= professor.email %></p>
+    </div>
+  </div>
 
-    </div>
-    <div class="listOfTheme">
-      <a href="" class="btn btn-secondary">Delete</a>
-    </div>
-    <div class="listOfRequests">
-    </div>
-    <a href="/users/logout" class="btn btn-secondary">Logout</a>
-    <a href="" class="btn btn-secondary">Edit profile</a>
-  </body>
-</html>
+  <form action = "/professor/deleteTheme" method="POST">
+  <div class="listOfTheme">
+    <p>List of themes</p>
+    <table id="professorThemesTable" class="table table-hover">
+      <thead>
+        <% let headers = ['Title']; %>
+        <% headers.forEach(headerText => { %>
+        <th scope="col"><%= headerText %></th>
+        <% }); %>
+      </thead>
+      <tbody>
+        <% themes.forEach(function(theme) { %>
+              <tr class="table-light">
+              <td><a href="/professor/theme <%= theme.title %>"><%= theme.title %></a></td>
+              <td><button type="submit" class="btn btn-primary" name = "button" value = "<%= theme.title %>">Delete</button></td>
+             </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+</form>
+  <div class="listOfRequests">
+    <p>List of requires</p>
+    <table id="professorRequiresTable" class="table table-hover">
+      <thead>
+        <% let headers2 = ['Title']; %>
+        <% headers2.forEach(headerText => { %>
+        <th scope="col"><%= headerText %></th>
+        <% }); %>
+      </thead>
+      <tbody>
+        <% listOfRequestsThemes.forEach(function(theme) { %>
+              <tr class="table-light">
+              <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
+             </tr>
+      <% }); %>
+      </tbody>
+    </table>
+  </div>
+  <a href="/users/logout" class="btn btn-primary">Logout</a>
+  <a class="btn btn-primary" href = "/professor/professorHome">Edit profile</a>

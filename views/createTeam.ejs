@@ -1,0 +1,13 @@
+
+<h2> Create team </h2>
+<form action="/team/createTeam" method="POST">
+  <div class="form-group">
+    <p>Name</p>
+    <input type="name" id="name" name="name" class="form-control" value="<%= typeof name != 'undefined' ? name : '' %>">
+  </div>
+  <div name = "mem" class="form-group">
+    <p>Members</p>
+    <input type="email" multiple size = "3"  id="inputmembers" name="members" class="form-control" value="<%= typeof members != 'undefined' ? members : '' %>">
+  </div>
+  <button type="submit" name="create" class="btn btn-primary btn-block">Create</button>
+</form>

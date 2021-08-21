@@ -1,10 +1,33 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Team</title>
-  </head>
-  <body>
-    <h1>Information about team</h1>
-  </body>
-</html>
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">Information about team</h1>
+      <form>
+        <div class="info">
+          <div class="name">
+            <p class="lead mb-3">Name: <%= team.name %></p>
+          </div>
+          <div class="numberOfMembers">
+            <p class="lead mb-3">Number of members: <%= team.numberOfMembers %></p>
+          </div>
+          <div class="members">
+            <p class="lead mb-3">Members: </p>
+            <% students.forEach(function(student) { %>
+            <p class="lead mb-3"><%= student.email %></p>
+            <% });%>
+          </div>
+          <div class="chosenTheme">
+            <p class="lead mb-3">Chosen: <%= team.chosen %></p>
+          </div>
+        </div>
+        <span>
+        <%  if(user.role == "professor"){ %>
+           <a style="margin:10px" href="/professor/professorProfile">Go Back</a>
+         <% } else{ %>
+          <a style="margin:10px" href="/student/studentProfile">Go Back</a>
+        <%}%>
+        </span>
+      </form>
+    </div>
+  </div>
+</div>
