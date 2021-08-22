@@ -25,8 +25,29 @@
 
 <br>
 
+<hr>
+<%   if(student.teamName != null) { %>
+<%     // ovde moze da se pristupi promenljivoj team i chosenTheme %>
+  
+<%      if(team.chosenTheme != null ) { %>
+
+<%        // Timu je dodeljena tema %>
+<%        // Prikazi naziv teme     %>
+        <p>Tvom timu <%= student.teamName %> je odobrena tema pod nazivom: <%= chosenTheme.title %>  </p>
+
+<%      } else if (team.isApplied == true) {  %>
+<%        // Tim nema naziv teme ali je prijavljen, sto znaci da ceka odobrenje  %>
+<%        // Prikazi naziv teme   %>
+<%        // Prodji kroz listu svih slobodnih tema, i prodji kroz teamsApplied, pitaj da li je unutra  %>
+        <p>Tvoj tim <%= student.teamName %> ceka na temu  <%= appliedTheme.title %>  </p>
+<%      } %>
+
+<%   } %>
+<hr>
+
 <h4 style="text-align: center">Available themes</h4>
 <br>
+
 <form class="d-flex">
         <input class="form-control me-sm-2" type="text" placeholder="Search">
         <button class="btn btn-outline-secondary" type="submit">Search</button>

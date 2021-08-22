@@ -13,7 +13,7 @@ const Team = require('../models/Team.js');
 router.get('/studentHome', ensureAuthenticated, (req, res) => {
     Theme.find(function(err, themes) {
 
-      if (req.user.teamName == "") {
+      if (req.user.teamName == null) {
         // Student nema tim
         res.render('studentdashboard', {
               student: req.user,
@@ -24,15 +24,61 @@ router.get('/studentHome', ensureAuthenticated, (req, res) => {
         // Student ima tim
         Team.findOne({ name: req.user.teamName }, function(err, team) {
 
-          res.render('studentdashboard', {
-                student: req.user,
-                themes: themes,
-                team: team
+          // da li tim vec ima odabranu TEMU
+          if(team.chosenTheme != null ) {
+            
+            // tim ima temu, prikazi mu je
+            Theme.findOne({ _id: team.chosenTheme }, function(err, theme) {
+
+              res.render('studentdashboard', {
+                    student: req.user,
+                    themes: themes,
+                    chosenTheme: theme,
+                    team: team
+                });
+
             });
+
+          } else if (team.isApplied == true && team.chosenTheme == null) {
+            // tim se prijavio za neku temu,ceka da mu se odobri, nadji za koju
+            // ili da mu se odobri ako se prijavio (nalazi se u listi)
+
+            themes.forEach(function(theme) {
+              // prodji kroz svaku temu i kroz svaku listu
+              var today = new Date();
+              if (theme.expiryDate >= today && theme.isAvailable == true) {
+                // pristupam samo dostupnim temama
+                if(theme.teamsApplied.includes(team._id)) {
+                  // za ovu temu se prijavio tim, prosledi mu je
+                  console.log("Tim: " + team.name + "se prijavio za temu: " + theme);
+
+                  res.render('studentdashboard', {
+                        student: req.user,
+                        themes: themes,
+                        team: team,
+                        appliedTheme: theme
+
+                    });
+                }
+              }
+
+            });
+
+          } else {
+            // tim nema temu, treba da izabere
+            res.render('studentdashboard', {
+                  student: req.user,
+                  themes: themes,
+                  team: team
+              });
+          }
+
         });
+
       }
 
     });
+
 });
 
 // Student Profile
