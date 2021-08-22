@@ -12,13 +12,28 @@ const Team = require('../models/Team.js');
 // Student Dashboard
 router.get('/studentHome', ensureAuthenticated, (req, res) => {
     Theme.find(function(err, themes) {
-      res.render('studentdashboard', {
-            student: req.user,
-            themes: themes
+
+      if (req.user.teamName == "") {
+        // Student nema tim
+        res.render('studentdashboard', {
+              student: req.user,
+              themes: themes
+          });
+
+      } else {
+        // Student ima tim
+        Team.findOne({ name: req.user.teamName }, function(err, team) {
+
+          res.render('studentdashboard', {
+                student: req.user,
+                themes: themes,
+                team: team
+            });
         });
+      }
+
     });
 });
-
 
 // Student Profile
 router.get('/studentProfile', ensureAuthenticated, (req, res) =>
@@ -48,7 +63,7 @@ router.get('/theme/:title?', ensureAuthenticated, (req, res) => {
 router.post('/leaveTeam', (req, res, next) => {
 
   Student.findOneAndUpdate({ email: req.user.email }, { teamName: "" }, function(err, student) {
-    console.log("Clan koji zeli da napusti: " + student._id);
+    //console.log("Clan koji zeli da napusti: " + student._id);
     Team.findOne({ name: student.teamName }, function(err, team) {
       let teamMembers = team.members;
 
@@ -78,8 +93,8 @@ router.post('/leaveTeam', (req, res, next) => {
         // ostalo 2 ili 3 studenta
         // 1. proci kroz team.members i obrisati student._id
         // 2. kod tima,  numberOfMembers=members.length
-        console.log("Sva tri clana : " + team.members); // na neku cudnu foru izbaci onog ko je kliknuo Leave team
-        console.log("Oni koji su ostali: " + teamMembers);
+      //  console.log("Sva tri clana : " + team.members); // na neku cudnu foru izbaci onog ko je kliknuo Leave team
+      //  console.log("Oni koji su ostali: " + teamMembers);
 
         Team.findOneAndUpdate( { _id: team._id }, { members: teamMembers, numberOfMembers: newNumberOfMembers }, function(err, student) { });
 
@@ -91,8 +106,33 @@ router.post('/leaveTeam', (req, res, next) => {
 
   });
 
-  res.redirect('/student/studentHome');
+  res.redirect('/student/studentProfile');
 
+});
+
+router.post('/applyForTheme', (req, res, next) => {
+   // console.log(req.body.button); naziv teme koja je kliknuta
+   // console.log(req.user);
+
+   // 1. nadji tim i postavi isApplied: true
+   Team.findOneAndUpdate({ name: req.user.teamName },  { isApplied: true }, function(err, team) {
+
+     console.log("Tema " + req.body.button);
+     console.log("Tim id: " + team._id);
+     // 2. nadji temu i dodaj team._id u teamsApplied
+
+      Theme.findOne({ title: req.body.button }, function(err, theme) {
+
+        theme.teamsApplied.push(team._id);
+
+        Theme.findOneAndUpdate({ title: theme.title }, { teamsApplied: theme.teamsApplied }, function(err, updatedTheme) {});
+
+      });
+
+    }); // Team
+
+
+   res.redirect('/student/studentHome');
 });
 
 // -----------------------------------------------------------------------------------------------------------------

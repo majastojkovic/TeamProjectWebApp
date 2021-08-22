@@ -52,4 +52,30 @@ $("input:checkbox").on('click', function() {
 });
 */
 
+router.post('/approveTheme', (req, res, next) => {
+
+   let prosledjeno = req.body.checkedTeam;
+
+   let temaITim = prosledjeno.split(',');
+
+   // 1. team.chosenTheme=theme.title
+   Team.findOne({ name: temaITim[0] }, function(err, team) {
+
+     // theme.isAvailable:false
+     // theme.teamsApplied=null
+     // theme.teamApproved=team._id
+     Theme.findOneAndUpdate({ title: temaITim[1] }, {isAvailable: false, teamsApplied: null, teamApproved: team._id }, function(err, theme) {
+
+       Team.findOneAndUpdate({ name: temaITim[0] }, { chosenTheme: theme._id },  function(err, team) { });
+
+     });
+
+   });
+
+
+   // {chosenTheme: temaITim[1]}
+
+   res.redirect('/professor/theme/' + temaITim[1]);
+});
+
 module.exports = router;

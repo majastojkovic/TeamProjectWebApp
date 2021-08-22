@@ -39,7 +39,7 @@
             <dt>Email: </dt>
             <dd><%= student.email %></dd>
 
-         <% if (student.teamName != "") { %>
+         <% if (student.teamName != null) { %>
               <dt>Team Name: </dt>
               <dd><%= student.teamName %></dd>
          <% } %>
@@ -49,7 +49,7 @@
 
           <span>
             <a style="margin:10px" href="/student/studentHome">Go Back</a>
-            <% if (student.teamName != "") { %>
+            <% if (student.teamName != null) { %>
             <button type="submit" class="btn btn-outline-primary">Leave Team</button>
             <% } %>
           </span>

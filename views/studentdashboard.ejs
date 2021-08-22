@@ -8,9 +8,11 @@
         <li class="nav-item">
           <a class="nav-link" href="/student/studentProfile">My profile</a>
         </li>
+        <% if(student.teamName == null) {  %>
         <li class="nav-item">
           <a class="nav-link" href="/student/createTeam">Create Your Team</a>
         </li>
+      <% } %>
         <li class="nav-item">
           <a class="nav-link" href="/users/logout">Logout</a>
         </li>
@@ -31,13 +33,34 @@
 </form>
 
 
+  <form action="/student/applyForTheme" method="POST">
+
+
 <table id="studentThemesTable" class="table table-hover">
+
   <thead>
-    <% let headers = ['Title', 'Expiry Date', 'Apply']; %>
+    <% let headers = []; %>
+    <!-- AKO STUDENT NEMA TIM -->
+    <!-- AKO STUDENT IMA TIM-->
+      <!-- TIM CEKA NA ODOBRENJE TEME => APPLY SE NE VIDI-->
+      <!-- ODOBRENA TEMA => APPLY SE NE VIDI -->
+    <% if(student.teamName == null) {  %>
+      <% headers = ['Title', 'Expiry Date']; %>
+    <% } else {  %>
+      <%    if( team.isApplied==true || team.chosenTheme != null){ %>
+        <% headers = ['Title', 'Expiry Date']; %>
+        <%} else { %>
+      <!-- AKO STUDENT IMA TIM-->
+        <!-- TIM SE NIJE PRIJAVIO NI ZA JEDNU TEMU => APPLY SE VIDI -->
+        <% headers = ['Title', 'Expiry Date', 'Apply']; %>
+        <% }%>
+    <% }  %>
+
     <% headers.forEach(headerText => { %>
         <th scope="col"><%= headerText %></th>
     <% }); %>
   </thead>
+
   <tbody>
       <% themes.forEach(function(theme) { %>
       <%  var today = new Date(); %>
@@ -47,7 +70,16 @@
           <tr class="table-light">
             <td><a href="/student/theme/<%= theme.title %>"><%= theme.title %></a></td>
             <td><%= theme.expiryDate %></td>
-            <td><button type="submit" class="btn btn-primary">Apply</button></td>
+            <% if(student.teamName == null) {  %>
+            <% } else {  %>
+              <%    if( team.isApplied==true || team.chosenTheme != null){ %>
+                <%} else { %>
+              <!-- AKO STUDENT IMA TIM-->
+                <!-- TIM SE NIJE PRIJAVIO NI ZA JEDNU TEMU => APPLY SE VIDI -->
+                <td><button type="submit" class="btn btn-primary" name="button" value="<%= theme.title %>">Apply</button></td>
+                <% }%>
+            <% }  %>
+
         </tr>
       <%  } %>
 
@@ -55,6 +87,9 @@
 
 
   </tbody>
+
 </table>
+
+</form>
 
 <!-- <p class="lead mb-3"><%= student %> </p> -->
