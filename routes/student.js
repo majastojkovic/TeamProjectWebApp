@@ -14,12 +14,12 @@ router.get('/createTeam', ensureAuthenticated, (req, res) => res.render('createT
 /*router.get('/team', (req, res) => res.render('team', {
   team:req.user
 }));*/
-router.get('/team/:name?', ensureAuthenticated, (req, res) => {
+/*router.get('/team/:name?', ensureAuthenticated, (req, res) => {
     Team.findOne({ name: req.params.name }, function(err, team) {
       res.render('team', {
             user: req.user,
             team: team
         });
     });
-});
+});*/
 module.exports = router;
