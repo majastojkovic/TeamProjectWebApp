@@ -25,7 +25,8 @@ const teamSchema = new Schema({
 
 //sprecava da tim aplicira vise puta na temu
   isApplied: {
-    type: Boolean
+    type: Boolean,
+    require:true
   }
 
 });

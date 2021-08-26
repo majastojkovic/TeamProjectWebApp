@@ -178,8 +178,11 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+  let errors = [];
+  let password = req.body.password;
+  let email = req.body.email;
   Student.findOne({
-    email: req.body.email
+    email: email
   }).then(user => {
     if (user) {
       // User exists
@@ -191,7 +194,7 @@ router.post('/login', (req, res, next) => {
       })(req, res, next);
     } else {
       Professor.findOne({
-        email: req.body.email
+        email: email
       }).then(user1 => {
         if(user1){
         // Loged User is professor
@@ -201,13 +204,16 @@ router.post('/login', (req, res, next) => {
           failureFlash: true
         })(req, res, next);
       }
-      /*else {
-        passport.authenticate('local', {
-       successRedirect: '/dashboard',
-       failureRedirect: '/users/login',
-       failureFlash: true
-     })(req, res, next);
-   }*/
+      else {
+        errors.push({
+          msg: 'Please enter valid email.'
+        });
+        res.render('login', {
+          errors,
+          email,
+          password
+        });
+   }
       })
     }
   });
