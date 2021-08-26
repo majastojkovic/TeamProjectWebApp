@@ -1,10 +1,13 @@
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
   <div class="container-fluid">
+
     <div class="collapse navbar-collapse" id="navbarColor01">
-
       <ul class="navbar-nav me-auto">
-
+        <li>
+          <img src="https://www.elfak.ni.ac.rs/images/logo_elfak_en.png" alt="">
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link" href="/student/studentProfile">My profile</a>
         </li>
@@ -12,14 +15,18 @@
         <li class="nav-item">
           <a class="nav-link" href="/student/createTeam">Create Your Team</a>
         </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/team/team">Your Team</a>
+        </li>
       <% } %>
         <li class="nav-item">
           <a class="nav-link" href="/users/logout">Logout</a>
         </li>
-
       </ul>
 
     </div>
+
   </div>
 </nav>
 
@@ -28,18 +35,18 @@
 <hr>
 <%   if(student.teamName != null) { %>
 <%     // ovde moze da se pristupi promenljivoj team i chosenTheme %>
-  
+
 <%      if(team.chosenTheme != null ) { %>
 
 <%        // Timu je dodeljena tema %>
 <%        // Prikazi naziv teme     %>
-        <p>Tvom timu <%= student.teamName %> je odobrena tema pod nazivom: <%= chosenTheme.title %>  </p>
+        <p style="text-align: center">Your team <a href="/team/team"><%= student.teamName %></a> has been approved a theme <a href="/student/theme/<%= chosenTheme.title %>"><%= chosenTheme.title %></a>  </p>
 
 <%      } else if (team.isApplied == true) {  %>
 <%        // Tim nema naziv teme ali je prijavljen, sto znaci da ceka odobrenje  %>
 <%        // Prikazi naziv teme   %>
 <%        // Prodji kroz listu svih slobodnih tema, i prodji kroz teamsApplied, pitaj da li je unutra  %>
-        <p>Tvoj tim <%= student.teamName %> ceka na temu  <%= appliedTheme.title %>  </p>
+        <p style="text-align: center">Your team <a href="/team/team"><%= student.teamName %></a> is waiting for approval for the theme <a href="/student/theme/<%= appliedTheme.title %>"><%= appliedTheme.title %></a></p>
 <%      } %>
 
 <%   } %>
@@ -48,16 +55,24 @@
 <h4 style="text-align: center">Available themes</h4>
 <br>
 
+
 <form class="d-flex">
+    <select name="searchBy" id="searchBy" class="form-control" value="<%= typeof searchBy != 'undefined' ? role : '' %>">
+      <option value="none" selected disabled hidden>Search By</option>
+      <option value="title">Title</option>
+      <option value="professor">Professor</option>
+    </select>
         <input class="form-control me-sm-2" type="text" placeholder="Search">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
 </form>
 
 
-  <form action="/student/applyForTheme" method="POST">
+<br>
+
+<form action="/student/applyForTheme" method="POST">
 
 
-<table id="studentThemesTable" class="table table-hover">
+  <table id="studentThemesTable" class="table table-hover">
 
   <thead>
     <% let headers = []; %>
@@ -82,7 +97,7 @@
     <% }); %>
   </thead>
 
-  <tbody>
+  <tbody id="myTable">
       <% themes.forEach(function(theme) { %>
       <%  var today = new Date(); %>
 

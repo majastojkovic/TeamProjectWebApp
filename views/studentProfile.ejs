@@ -1,19 +1,27 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarColor03">
 
+    <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
-
+        <li>
+          <img src="https://www.elfak.ni.ac.rs/images/logo_elfak_en.png" alt="">
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link" href="/student/studentHome">Home</a>
         </li>
+        <% if(student.teamName == null) {  %>
+        <li class="nav-item">
+          <a class="nav-link" href="/student/createTeam">Create Your Team</a>
+        </li>
+      <% } %>
         <li class="nav-item">
           <a class="nav-link" href="/users/logout">Logout</a>
         </li>
-
       </ul>
-
     </div>
+
   </div>
 </nav>
 
@@ -22,36 +30,46 @@
   <div class="col-md-6 m-auto">
     <div class="card card-body">
 
-      <h1 class="text-center mb-3">Student Profile</h1>
+      <h1 class="text-center mb-3"><i class="fas fa-user"></i>  Student Profile</h1>
+
+      <br>
 
       <form action="/student/leaveTeam" method="POST">
 
         <div class="form-group">
 
           <!-- <dl class="dl-horizontal"> -->
-          <dl>
 
-            <dt>Name: </dt>
-            <dd><%= student.name %></dd>
+          <div class="infoStudent">
 
-            <dt>Surname: </dt>
-            <dd><%= student.surname %></dd>
+            <div class="name">
+              <p class="lead mb-3"><strong>Name: </strong><%= student.name %></p>
+            </div>
 
-            <dt>Email: </dt>
-            <dd><%= student.email %></dd>
+            <div class="surname">
+              <p class="lead mb-3"><strong>Surname: </strong><%= student.surname %></p>
+            </div>
+
+            <div class="email">
+              <p class="lead mb-3"><strong>Email: </strong><%= student.email %></p>
+            </div>
+
 
          <% if (student.teamName != null) { %>
-              <dt>Team Name: </dt>
-              <dd><%= student.teamName %></dd>
+              <div class="email">
+              <p class="lead mb-3"><strong>Team Name: </strong><%= student.teamName %></p>
+              </div>
          <% } %>
 
 
-          </dl>
+          </div>
+
+          <br>
 
           <span>
             <a style="margin:10px" href="/student/studentHome">Go Back</a>
             <% if (student.teamName != null) { %>
-            <button type="submit" class="btn btn-outline-primary">Leave Team</button>
+            <button type="submit" style="background-color: #7d9fb9" class="btn btn-outline-light">Leave Team</button>
             <% } %>
           </span>
 

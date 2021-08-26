@@ -42,33 +42,26 @@ router.post('/approveTheme', (req, res, next) => {
 
    let prosledjeno = req.body.checkedTeam;
 
-   let temaITim = prosledjeno.split(',');
+   let timITema = prosledjeno.split(',');
 
-   // 1. team.chosenTheme=theme.title
-   Team.findOne({ name: temaITim[0] }, function(err, team) {
+   // nasla sam tim kome treba da se dodeli tema
+   Team.findOne({ name: timITema[0] }, function(err, teamApproved) {
 
-     // 2. theme.isAvailable:false
-     // 3. theme.teamsApplied=null
-     // 4. theme.teamApproved=team._id
+     Theme.findOneAndUpdate({ title: timITema[1] }, { isAvailable: false, teamsApplied: null, teamApproved: teamApproved._id }, function(err, theme) {
 
-     // 5. NIJE URADJENO: Prodji kroz sve ostale timove i postavi im isApplied: false da bi mogli da se prijave za neku drugu
-     // 5.1 Theme.find - tu temu
-     // 5.2 izvuci theme.teamsApplied (element je objectId)
-     // 5.3 theme.teamsApplied.forEach(teamObjectId => {
-     //         Team.findOneAndUpdate({ _id: teamObjectId }, { isApplied: false },  function(err, team) { });
-    //  })
-     Theme.findOneAndUpdate({ title: temaITim[1] }, {isAvailable: false, teamsApplied: null, teamApproved: team._id }, function(err, theme) {
+       theme.teamsApplied.forEach(teamObjectId => {
+         // svi timovi mogu da se ponovo prijave na neku temu
+         Team.findOneAndUpdate({ _id: teamObjectId }, { isApplied: false }, function(err, team) {});
+       });
 
-       Team.findOneAndUpdate({ name: temaITim[0] }, { chosenTheme: theme._id },  function(err, team) { });
+       // ovaj kome je odobrena tema, promeni polja
+       Team.findOneAndUpdate({ name: timITema[0] }, { chosenTheme: theme._id, isApplied: true },  function(err, team) { });
 
      });
 
    });
 
-
-   // {chosenTheme: temaITim[1]}
-
-   res.redirect('/professor/theme/' + temaITim[1]);
+   res.redirect('/professor/theme/' + timITema[1]);
 });
 
 module.exports = router;

@@ -26,7 +26,7 @@ router.get('/studentHome', ensureAuthenticated, (req, res) => {
 
           // da li tim vec ima odabranu TEMU
           if(team.chosenTheme != null ) {
-            
+
             // tim ima temu, prikazi mu je
             Theme.findOne({ _id: team.chosenTheme }, function(err, theme) {
 
@@ -50,7 +50,6 @@ router.get('/studentHome', ensureAuthenticated, (req, res) => {
                 // pristupam samo dostupnim temama
                 if(theme.teamsApplied.includes(team._id)) {
                   // za ovu temu se prijavio tim, prosledi mu je
-                  console.log("Tim: " + team.name + "se prijavio za temu: " + theme);
 
                   res.render('studentdashboard', {
                         student: req.user,
@@ -163,8 +162,8 @@ router.post('/applyForTheme', (req, res, next) => {
    // 1. nadji tim i postavi isApplied: true
    Team.findOneAndUpdate({ name: req.user.teamName },  { isApplied: true }, function(err, team) {
 
-     console.log("Tema " + req.body.button);
-     console.log("Tim id: " + team._id);
+     //console.log("Tema " + req.body.button);
+     //console.log("Tim id: " + team._id);
      // 2. nadji temu i dodaj team._id u teamsApplied
 
       Theme.findOne({ title: req.body.button }, function(err, theme) {
@@ -173,15 +172,16 @@ router.post('/applyForTheme', (req, res, next) => {
 
         Theme.findOneAndUpdate({ title: theme.title }, { teamsApplied: theme.teamsApplied }, function(err, updatedTheme) {});
 
+          // Kad se prijavi za temu, vodi ga da vidi informacije o temi
+          res.redirect('/student/theme/' + theme.title);
+
       });
 
-    }); // Team
+    });
 
+  //  res.redirect('/student/studentProfile');
 
-   res.redirect('/student/studentHome');
 });
 
-// -----------------------------------------------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------------------------------------------
 module.exports = router;
