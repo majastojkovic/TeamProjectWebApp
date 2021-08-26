@@ -13,9 +13,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/users/logout">Logout</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/professor/professorHome">Edit profile</a>
-        </li>
       </ul>
     </div>
   </div>
@@ -55,7 +52,7 @@
       <tbody>
         <% themes.forEach(function(theme) { %>
         <tr class="table-light">
-          <td><a href="/professor/theme <%= theme.title %>"><%= theme.title %></a></td>
+          <td><a href="/professor/theme/<%=theme.title %>"><%= theme.title %></a></td>
           <td><button type="submit" class="btn btn-outline-primary" name="button" value="<%= theme.title %>">Delete</button></td>
         </tr>
         <% }); %>

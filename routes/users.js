@@ -25,7 +25,8 @@ router.get('/login', (req, res) => res.render('login'));
 
 
 // Register
-router.post('/register', (req, res) => {
+router.post('/register', (req, res, next) => {
+  const teamName=null;
   const {
     name,
     surname,
@@ -94,6 +95,7 @@ router.post('/register', (req, res) => {
             surname,
             email,
             password,
+            teamName,
             role
           });
 
@@ -107,8 +109,11 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  //  req.flash('success_msg', 'You are now registered and can log in.');
-                  res.redirect('/users/login');
+                  passport.authenticate('localStudent', {
+                    successRedirect: '/student/studentHome',
+                    failureRedirect: '/users/login',
+                    failureFlash: true
+                  })(req, res, next);
                 })
                 .catch(err => console.log(err));
             });
@@ -135,13 +140,15 @@ router.post('/register', (req, res) => {
             role
           });
         } else {
+          let listOfThemes = [];
           const newUser = new Professor({
             errors,
             name,
             surname,
             email,
             password,
-            role
+            role,
+            listOfThemes
           });
 
           // Hash Password
@@ -154,8 +161,11 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then(user => {
-                  //  req.flash('success_msg', 'You are now registered and can log in.');
-                  res.redirect('/users/login');
+                  passport.authenticate('localProfessor', {
+                    successRedirect: '/professor/professorHome',
+                    failureRedirect: '/users/login',
+                    failureFlash: true
+                  })(req, res, next);
                 })
                 .catch(err => console.log(err));
             });
@@ -168,29 +178,42 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res, next) => {
+  let errors = [];
+  let password = req.body.password;
+  let email = req.body.email;
   Student.findOne({
-    email: req.body.email
+    email: email
   }).then(user => {
     if (user) {
       // User exists
       // Loged User is student
-      passport.authenticate('local', {
+      passport.authenticate('localStudent', {
         successRedirect: '/student/studentHome',
         failureRedirect: '/users/login',
         failureFlash: true
       })(req, res, next);
     } else {
       Professor.findOne({
-        email: req.body.email
+        email: email
       }).then(user1 => {
         if(user1){
         // Loged User is professor
-        passport.authenticate('local', {
+        passport.authenticate('localProfessor', {
           successRedirect: '/professor/professorHome',
           failureRedirect: '/users/login',
           failureFlash: true
         })(req, res, next);
       }
+      else {
+        errors.push({
+          msg: 'Please enter valid email.'
+        });
+        res.render('login', {
+          errors,
+          email,
+          password
+        });
+   }
       })
     }
   });
@@ -201,7 +224,7 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You are logged out');
-  res.redirect('/');
+  res.redirect('/users/login');
 });
 
 

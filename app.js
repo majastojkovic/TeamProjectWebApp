@@ -12,19 +12,6 @@ const app = express();
 
 // Passport Config
 require('./config/passport')(passport);
-
-//app.use(express.static("public"));
-//  app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({
-  extended: false
-}));
-//Load models
-const Student = require('./models/Student.js');
-
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
-});
-
 // DB Config
 const db = require('./config/keys').mongoURI;
 
@@ -47,6 +34,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({
   extended: false
 }));
+
 
 // Express session
 app.use(
@@ -72,9 +60,19 @@ app.use(function(req, res, next) {
   next();
 });
 
+
 // Routes
 app.use('/', require('./routes/index.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('/professor', require('./routes/professor.js'));
 app.use('/student', require('./routes/student.js'));
+app.use('/index', require('./routes/index.js'));
 app.use('/team', require('./routes/team.js'));
+
+app.listen(3000, function() {
+  console.log("Server started on port 3000");
+});
+
+app.use(function(req,res){
+    res.status(404).render('404');
+});

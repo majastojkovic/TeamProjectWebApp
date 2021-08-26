@@ -1,75 +1,85 @@
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 // Load User model
 const Professor = require('../models/Professor');
 const Student = require('../models/Student');
+module.exports = (app) => {
 
-
-module.exports = function(passport) {
-  passport.use(
+  passport.use('localStudent',
     new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
       // Match user
-    Student.findOne({ email: email })
-        .then(student => {
-          if (!student) {
-            Professor.findOne({ email: email})
-              .then(prof => {
-                if (!prof)
-                {
-                    return done(null, false, { message: 'That email is not registered.' });
-                }
-                else
-                {
-                  //profesor je
-                  // Match password
-                    bcrypt.compare(password, prof.password, (err, isMatch) => {
-                      if (err)
-                        throw err;
-                      if (isMatch) {
-                        return done(null, prof);
-                      } else {
-                        return done(null, false, { message: 'Password incorrect.' });
-                      }
-                  });
+      Student.findOne({ email: email })
+        .then(user => {
+          if (!user) {
+            return done(null, false, { message: 'That email is not registered.' });
+          }
 
-                    passport.serializeUser(function(prof, done) {
-                      done(null, prof._id);
-                    });
+        // Match password
+          bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err)
+              throw err;
+            if (isMatch) {
+              return done(null, user);
+            } else {
+              return done(null, false, { message: 'Password incorrect.' });
+            }
+        });
+      });
+    })
+  );
 
-                    passport.deserializeUser(function(id, done) {
-                      Professor.findById(id, function(err, prof) {
-                        done(err, prof);
-                      });
-                    });
-                }
+
+
+  passport.use('localProfessor',
+    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+      // Match user
+      Professor.findOne({ email: email })
+        .then(user1 => {
+          if (!user1) {
+            return done(null, false, { message: 'That email is not registered.' });
+          }
+
+        // Match password
+          bcrypt.compare(password, user1.password, (err, isMatch) => {
+            if (err)
+              throw err;
+            if (isMatch) {
+              return done(null, user1);
+            } else {
+              return done(null, false, { message: 'Password incorrect.' });
+            }
+        });
+      });
+    })
+  );
+
+  passport.serializeUser(function(user, done) {
+    done(null, { _id:user._id, role: user.role });
+  });
+
+  passport.deserializeUser((login, done) => {
+          if (login.role === 'student') {
+              Student.findById(login, function (err, user) {
+                  if (user)
+                      done(null, user);
+                  else
+                      done(err, { message: 'Student not found' })
               });
           }
-          else
-          {
-            //student je
-            // Match password
-              bcrypt.compare(password, student.password, (err, isMatch) => {
-                if (err)
-                  throw err;
-                if (isMatch) {
-                  return done(null, student);
-                } else {
-                  return done(null, false, { message: 'Password incorrect.' });
-                }
-            });
-
-              passport.serializeUser(function(student, done) {
-                done(null, student._id);
+          else if (login.role === 'professor') {
+              Professor.findById(login, (err, admin) => {
+                  if (admin)
+                      done(null, admin);
+                  else
+                      done(err, { message: 'Professor not found' })
               });
-
-              passport.deserializeUser(function(id, done) {
-                Student.findById(id, function(err, student) {
-                  done(err, student);
-                });
-              });
+          }
+          else {
+              done({ message: 'No entity found' }, null);
           }
       });
-    }));
-};
+
+}

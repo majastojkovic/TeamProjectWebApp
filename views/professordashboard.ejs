@@ -1,3 +1,63 @@
-<h1 class="mt-4">Prikaz tema za profesora kad se uloguje</h1>
-<p class="lead mb-3">Welcome </p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="logo" class="col-xs-8 col-sm-5 col-md-5">
+      <a href="/professor/professorHome">
+        <img src="https://www.elfak.ni.ac.rs/images/logo_elfak_en.png" alt >
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/professor/professorProfile">My profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/professor/createNewTheme">Create New Theme</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<br>
+<h1 style="text-align:center">All themes</h1>
+
+<br >
+<form class="d-flex" action="/professor/search" method="POST">
+        <input id= "search" name="searchText" class="form-control me-sm-2" type="text" placeholder="Enter name of theme">
+         <button class="btn btn-outline-secondary" type="submit">Search</button>
+</form>
+
+<br >
+<table id="professorThemesTable" class="table table-hover">
+  <thead>
+    <% let headers = ['Title', 'Professor', 'Description']; %>
+    <% headers.forEach(headerText => { %>
+        <th scope="col"><%= headerText %></th>
+    <% }); %>
+  </thead>
+  <tbody>
+      <tr class="table-light">
+        <% themes.forEach(function(theme) { %>
+          <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
+          <% professors.forEach(function (prof) { %>
+            <%  if(prof._id.equals(theme.professor)) { %>
+              <td><%= prof.name %> <%= prof.surname %></td>
+            <% } %>
+          <%  }); %>
+        <td><%= theme.description  %></td>
+          </tr>
+    <% }); %>
+
+  </tbody>
+</table>
+
+<!-- <p class="lead mb-3"><%= professor %> </p> -->

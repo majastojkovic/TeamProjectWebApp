@@ -1,0 +1,131 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+  <div class="container-fluid">
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li>
+          <img src="https://www.elfak.ni.ac.rs/images/logo_elfak_en.png" alt="">
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/student/studentProfile">My profile</a>
+        </li>
+        <% if(student.teamName == null) {  %>
+        <li class="nav-item">
+          <a class="nav-link" href="/student/createTeam">Create Your Team</a>
+        </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/team/team">Your Team</a>
+        </li>
+      <% } %>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+</nav>
+
+<br>
+
+<hr>
+<%   if(student.teamName != null) { %>
+<%     // ovde moze da se pristupi promenljivoj team i chosenTheme %>
+
+<%      if(team.chosenTheme != null ) { %>
+
+<%        // Timu je dodeljena tema %>
+<%        // Prikazi naziv teme     %>
+        <p style="text-align: center">Your team <a href="/team/team"></a> has been approved a theme <a href="/student/theme/<%= chosenTheme.title %>"><%= chosenTheme.title %></a>  </p>
+
+<%      } else if (team.isApplied == true) {  %>
+<%        // Tim nema naziv teme ali je prijavljen, sto znaci da ceka odobrenje  %>
+<%        // Prikazi naziv teme   %>
+<%        // Prodji kroz listu svih slobodnih tema, i prodji kroz teamsApplied, pitaj da li je unutra  %>
+        <p style="text-align: center">Your team <a href="/team/team"></a> is waiting for approval for the theme <a href="/student/theme/<%= appliedTheme.title %>"><%= appliedTheme.title %></a></p>
+<%      } %>
+
+<%   } %>
+<hr>
+
+<h4 style="text-align: center">Available themes</h4>
+<br>
+
+
+<form class="d-flex">
+    <select name="searchBy" id="searchBy" class="form-control" value="<%= typeof searchBy != 'undefined' ? role : '' %>">
+      <option value="none" selected disabled hidden>Search By</option>
+      <option value="title">Title</option>
+      <option value="professor">Professor</option>
+    </select>
+        <input class="form-control me-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+</form>
+
+
+<br>
+
+<form action="/student/applyForTheme" method="POST">
+
+
+  <table id="studentThemesTable" class="table table-hover">
+
+  <thead>
+    <% let headers = []; %>
+    <!-- AKO STUDENT NEMA TIM -->
+    <!-- AKO STUDENT IMA TIM-->
+      <!-- TIM CEKA NA ODOBRENJE TEME => APPLY SE NE VIDI-->
+      <!-- ODOBRENA TEMA => APPLY SE NE VIDI -->
+    <% if(student.teamName == null) {  %>
+      <% headers = ['Title', 'Expiry Date']; %>
+    <% } else {  %>
+      <%    if( team.isApplied==true || team.chosenTheme != null){ %>
+        <% headers = ['Title', 'Expiry Date']; %>
+        <%} else { %>
+      <!-- AKO STUDENT IMA TIM-->
+        <!-- TIM SE NIJE PRIJAVIO NI ZA JEDNU TEMU => APPLY SE VIDI -->
+        <% headers = ['Title', 'Expiry Date', 'Apply']; %>
+        <% }%>
+    <% }  %>
+
+    <% headers.forEach(headerText => { %>
+        <th scope="col"><%= headerText %></th>
+    <% }); %>
+  </thead>
+
+  <tbody id="myTable">
+      <% themes.forEach(function(theme) { %>
+      <%  var today = new Date(); %>
+
+      <% //prikazuje samo teme NOVIJEG DATUMA i one koje su SLOBODNE  %>
+      <%  if (theme.expiryDate >= today && theme.isAvailable == true) { %>
+          <tr class="table-light">
+            <td><a href="/student/theme/<%= theme.title %>"><%= theme.title %></a></td>
+            <td><%= theme.expiryDate %></td>
+            <% if(student.teamName == null) {  %>
+            <% } else {  %>
+              <%    if( team.isApplied==true || team.chosenTheme != null){ %>
+                <%} else { %>
+              <!-- AKO STUDENT IMA TIM-->
+                <!-- TIM SE NIJE PRIJAVIO NI ZA JEDNU TEMU => APPLY SE VIDI -->
+                <td><button type="submit" class="btn btn-primary" name="button" value="<%= theme.title %>">Apply</button></td>
+                <% }%>
+            <% }  %>
+
+        </tr>
+      <%  } %>
+
+    <% }); %>
+
+
+  </tbody>
+
+</table>
+
+</form>
+
+<!-- <p class="lead mb-3"><%= student %> </p> -->

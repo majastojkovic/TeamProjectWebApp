@@ -4,6 +4,7 @@ const passport = require('passport');
 const {
   ensureAuthenticated
 } = require('../config/auth');
+const { ensureAuthenticatedStudent } = require('../config/auth');
 
 const Theme = require('../models/Theme.js');
 const Team = require('../models/Team.js');
@@ -29,7 +30,7 @@ router.get('/team', ensureAuthenticated, (req, res) => {
   });
 });
 
-router.post('/createTeam', (req, res, err) => {
+router.post('/createTeam',  ensureAuthenticatedStudent,(req, res, err) => {
   const emails = req.body.members;
   const name = req.body.name;
   var members = [];
