@@ -1,54 +1,87 @@
-<h2>Professor profile</h2>
-  <div class="infoProfessor">
-    <div class="name">
-      <p class="lead mb-3">Name: <%= professor.name %></p>
-    </div>
-    <div class="surname">
-      <p class="lead mb-3">Surname: <%= professor.surname %></p>
-    </div>
-    <div class="email">
-      <p class="lead mb-3">Email: <%= professor.email %></p>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li>
+          <img src="https://www.elfak.ni.ac.rs/images/logo_elfak_en.png" alt="">
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/professor/professorHome">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/logout">Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/professor/professorHome">Edit profile</a>
+        </li>
+      </ul>
     </div>
   </div>
+</nav>
+<br>
 
-  <form action = "/professor/deleteTheme" method="POST">
-  <div class="listOfTheme">
-    <p>List of themes</p>
+<h1 class="text-center mb-3"><i class="fas fa-user"></i>  Professor profile</h1>
+<br>
+<div class="infoProfessor">
+  <div class="name">
+    <p class="lead mb-3"><strong>Name:  </strong><%= professor.name %></p>
+  </div>
+  <div class="surname">
+    <p class="lead mb-3"><strong>Surname:  </strong> <%= professor.surname %></p>
+  </div>
+  <div class="email">
+    <p class="lead mb-3"><strong>Email:  </strong> <%= professor.email %></p>
+  </div>
+</div>
+
+<hr>
+<br >
+<div class="container">
+
+<div class="row">
+<div class="col-md-5 mr-auto">
+  <form action="/professor/deleteTheme" method="POST">
+    <h3><strong>List of themes</strong></h3>
+    <br>
     <table id="professorThemesTable" class="table table-hover">
       <thead>
-        <% let headers = ['Title']; %>
+        <% let headers = ['Title', '']; %>
         <% headers.forEach(headerText => { %>
         <th scope="col"><%= headerText %></th>
         <% }); %>
       </thead>
       <tbody>
         <% themes.forEach(function(theme) { %>
-              <tr class="table-light">
-              <td><a href="/professor/theme <%= theme.title %>"><%= theme.title %></a></td>
-              <td><button type="submit" class="btn btn-primary" name = "button" value = "<%= theme.title %>">Delete</button></td>
-             </tr>
-      <% }); %>
-      </tbody>
-    </table>
-  </div>
-</form>
-  <div class="listOfRequests">
-    <p>List of requires</p>
-    <table id="professorRequiresTable" class="table table-hover">
-      <thead>
-        <% let headers2 = ['Title']; %>
-        <% headers2.forEach(headerText => { %>
-        <th scope="col"><%= headerText %></th>
+        <tr class="table-light">
+          <td><a href="/professor/theme <%= theme.title %>"><%= theme.title %></a></td>
+          <td><button type="submit" class="btn btn-outline-primary" name="button" value="<%= theme.title %>">Delete</button></td>
+        </tr>
         <% }); %>
-      </thead>
-      <tbody>
-        <% listOfRequestsThemes.forEach(function(theme) { %>
-              <tr class="table-light">
-              <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
-             </tr>
-      <% }); %>
       </tbody>
     </table>
-  </div>
-  <a href="/users/logout" class="btn btn-primary">Logout</a>
-  <a class="btn btn-primary" href = "/professor/professorHome">Edit profile</a>
+  </form>
+</div>
+
+<div class="col-md-5 ml-auto">
+  <h3><strong>List of requires</strong></h3>
+  <br>
+  <table id="professorRequiresTable" class="table table-hover">
+    <thead>
+      <% let headers2 = ['Title']; %>
+      <% headers2.forEach(headerText => { %>
+      <th scope="col"><%= headerText %></th>
+      <% }); %>
+    </thead>
+    <tbody>
+      <% listOfRequestsThemes.forEach(function(theme) { %>
+      <tr class="table-light">
+        <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
