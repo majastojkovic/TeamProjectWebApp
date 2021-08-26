@@ -50,7 +50,7 @@
           <td><a href="/professor/theme/<%= theme.title %>"><%= theme.title %></a></td>
           <% professors.forEach(function (prof) { %>
             <%  if(prof._id.equals(theme.professor)) { %>
-              <td><%= prof.name %></td>
+              <td><%= prof.name %> <%= prof.surname %></td>
             <% } %>
           <%  }); %>
         <td><%= theme.description  %></td>

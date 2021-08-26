@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { ensureAuthenticatedStudent } = require('../config/auth');
+const { ensureAuthenticated } = require('../config/auth');
 
 // Professor Dashboard
 
@@ -82,7 +83,7 @@ router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => {
 });
 
 // Student Profile
-router.get('/studentProfile', ensureAuthenticated, (req, res) =>
+router.get('/studentProfile', ensureAuthenticatedStudent, (req, res) =>
   res.render('studentProfile', {
     student: req.user // prenosi se student kao objekat iz baze
   }));
@@ -106,7 +107,7 @@ router.get('/theme/:title?', ensureAuthenticated, (req, res) => {
 
 });
 
-router.post('/leaveTeam', (req, res, next) => {
+router.post('/leaveTeam', ensureAuthenticatedStudent, (req, res, next) => {
 
   Student.findOneAndUpdate({ email: req.user.email }, { teamName: "" }, function(err, student) {
     //console.log("Clan koji zeli da napusti: " + student._id);
@@ -156,7 +157,7 @@ router.post('/leaveTeam', (req, res, next) => {
 
 });
 
-router.post('/applyForTheme', (req, res, next) => {
+router.post('/applyForTheme', ensureAuthenticatedStudent, (req, res, next) => {
    // console.log(req.body.button); naziv teme koja je kliknuta
    // console.log(req.user);
 

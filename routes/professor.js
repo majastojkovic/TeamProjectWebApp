@@ -8,11 +8,6 @@ const Theme = require('../models/Theme.js');
 const Team = require('../models/Team.js');
 //const datepicker = require('js-datepicker');
 
-const Student = require('../models/Student.js');
-const Professor = require('../models/Professor.js');
-const Theme = require('../models/Theme.js');
-const Team = require('../models/Team.js');
-
 // Professor Dashboard
 router.get('/professorHome', ensureAuthenticatedProfessor , (req, res) => {
     Theme.find(function(err, themes) {
@@ -28,7 +23,7 @@ router.get('/professorHome', ensureAuthenticatedProfessor , (req, res) => {
 
 router.get('/professorProfile', ensureAuthenticatedProfessor, (req, res) => res.render('professorProfile', { professor: req.user }));
 
-router.get('/theme/:title?', (req, res) => {
+router.get('/theme/:title?', ensureAuthenticated, (req, res) => {
 
     Theme.findOne({ title: req.params.title }, function(err, theme) {
 
