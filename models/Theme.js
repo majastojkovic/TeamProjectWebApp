@@ -20,7 +20,7 @@ const themeSchema = new Schema({
 
   professor: {
     type: Schema.ObjectId,
-    ref: "Professor", 
+    ref: "Professor",
     require: true
   },
 
