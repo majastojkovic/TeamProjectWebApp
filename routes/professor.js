@@ -128,23 +128,67 @@ Theme.findOne( {title: title} )
 
 });
 
-router.post('/search', ensureAuthenticatedProfessor , (req, res) => {
+router.post('/search', ensureAuthenticated , (req, res) => {
     const wantedItem = req.body.searchText;
-    let filteredThemes =[];
-    let flag= false;
+    const filterBy = req.body.searchBy;
+
+console.log(filterBy);
+if(filterBy== null || wantedItem == "")
+{
+  let errors = [];
+    if(req.user.role=="professor")
+    {
+      errors.push({
+        msg: 'Please check all filds for search.'
+      });
+      Theme.find(function(err, themes) {
+        Professor.find(function(err, professors){
+        res.render('professordashboard', {
+              errors,
+              professor: req.user,
+              professors: professors,
+              themes: themes
+          });
+        });
+      });
+    }else{
+      errors.push({
+        msg: 'Please check all filds for search.'
+      });
+        Theme.find(function(err, themes) {
+      Professor.find(function(err, professors){
+   Team.findOne({ name: req.user.teamName }, function(err, team) {
+   res.render('studentdashboard', {
+         errors,
+         student: req.user,
+         themes: themes,
+         team: team,
+         professors: professors
+        });
+        });
+      });
+    });
+    }
+}
+else
+{
+    if(filterBy.includes("title"))
+    {
+      let filteredThemes =[];
     Theme.find(function(err, themes) {
         console.log(wantedItem);
-        console.log(themes);
+
           themes.forEach(function(theme){
             if(theme.title.includes(wantedItem))
              {
                filteredThemes.push(theme);
-               flag=true;
              }
           });
         });
-        if(flag){
-          Professor.find(function(err, professors){
+        if(req.user.role=="professor")
+        {
+          console.log(filteredThemes);
+     Professor.find(function(err, professors){
             res.render('professordashboard', {
                 professor: req.user,
                 professors: professors,
@@ -154,27 +198,103 @@ router.post('/search', ensureAuthenticatedProfessor , (req, res) => {
         }
         else
         {
-          Theme.find(function(err, themes) {
-            Professor.find(function(err, professors){
-              themes.forEach(function(theme) {
-         	      professors.forEach(function (prof) {
-                  if(prof.name === wantedItem) {
-                    filteredThemes.push(theme);
-         	        }
-                  console.log(filteredThemes);
-                });
-              });
-              res.render('professordashboard', {
-                professor: req.user,
-                professors: professors,
-                themes: filteredThemes
-              });
-
+          Professor.find(function(err, professors){
+          Team.findOne({ name: req.user.teamName }, function(err, team) {
+          res.render('studentdashboard', {
+                student: req.user,
+                themes: filteredThemes,
+                team: team,
+                professors:professors
             });
           });
-
+        });
         }
-        flag=false;
+    }
+    else if(filterBy.includes("professor"))
+    {
+        console.log(wantedItem);
+        let filteredThemesProf =[];
+        Professor.findOne({ name: wantedItem }, function(err, professor) {
+          if(professor){
+          console.log(professor.listOfThemes);
+            Theme.find(function(err, themes) {
+                professor.listOfThemes.forEach(function (profTheme){
+                  var tema = themes.filter(function(theme) {
+                      return theme._id.equals(profTheme);
+                    })[0];
+                      filteredThemesProf.push(tema);
+                    console.log(tema);
+                });
+
+            });
+            if(req.user.role=="professor")
+            {
+            console.log(filteredThemesProf);
+            Professor.find(function(err, professors){
+                   res.render('professordashboard', {
+                       professor: req.user,
+                       professors: professors,
+                       themes: filteredThemesProf
+                   });
+                 });
+            }
+            else{
+                 Professor.find(function(err, professors){
+              Team.findOne({ name: req.user.teamName }, function(err, team) {
+              res.render('studentdashboard', {
+                    student: req.user,
+                    themes: filteredThemesProf,
+                    team: team,
+                    professors: professors
+                });
+              });
+            });
+            }
+          }
+          else{
+            let errors = [];
+              if(req.user.role=="professor")
+              {
+                errors.push({
+                  msg: "Selected professor doesn't exists."
+                });
+                Theme.find(function(err, themes) {
+                  Professor.find(function(err, professors){
+                  res.render('professordashboard', {
+                        errors,
+                        professor: req.user,
+                        professors: professors,
+                        themes: themes
+                    });
+                  });
+                });
+              }else{
+                errors.push({
+                  msg: "Selected professor doesn't exists."
+                });
+                  Theme.find(function(err, themes) {
+                Professor.find(function(err, professors){
+             Team.findOne({ name: req.user.teamName }, function(err, team) {
+             res.render('studentdashboard', {
+                   errors,
+                   student: req.user,
+                   themes: themes,
+                   team: team,
+                   professors: professors
+                  });
+                  });
+                });
+              });
+              }
+          }
+        });
+
+
+
+    }
+  }
+
+
 });
 
 router.post('/approveTheme',ensureAuthenticatedProfessor, (req, res, next) => {

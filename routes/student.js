@@ -14,12 +14,14 @@ const Team = require('../models/Team.js');
 // Student Dashboard
 router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => {
     Theme.find(function(err, themes) {
-
+      Professor.find(function(err, professors){
       if (req.user.teamName == null) {
         // Student nema tim
         res.render('studentdashboard', {
               student: req.user,
-              themes: themes
+              themes: themes,
+              professors: professors
+
           });
 
       } else {
@@ -36,7 +38,8 @@ router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => {
                     student: req.user,
                     themes: themes,
                     chosenTheme: theme,
-                    team: team
+                    team: team,
+                    professors: professors
                 });
 
             });
@@ -57,7 +60,8 @@ router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => {
                         student: req.user,
                         themes: themes,
                         team: team,
-                        appliedTheme: theme
+                        appliedTheme: theme,
+                        professors: professors
 
                     });
                 }
@@ -70,14 +74,15 @@ router.get('/studentHome', ensureAuthenticatedStudent, (req, res) => {
             res.render('studentdashboard', {
                   student: req.user,
                   themes: themes,
-                  team: team
+                  team: team,
+                  professors: professors
               });
           }
 
         });
 
       }
-
+    });
     });
 
 });

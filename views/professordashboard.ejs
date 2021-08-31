@@ -29,13 +29,22 @@
 
 <br>
 <h1 style="text-align:center">All themes</h1>
-
+<%- include('partials/messages'); %>
 <br >
+<!--
 <form class="d-flex" action="/professor/search" method="POST">
         <input id= "search" name="searchText" class="form-control me-sm-2" type="text" placeholder="Enter name of theme">
          <button class="btn btn-outline-secondary" type="submit">Search</button>
+</form> -->
+<form class="d-flex" action="/professor/search" method="POST">
+    <select name="searchBy" id="searchBy" class="form-control" >
+      <option value="none" selected disabled hidden>Search By</option>
+      <option value="title">Title</option>
+      <option value="professor">Professor</option>
+    </select>
+        <input id= "search" name="searchText"  class="form-control me-sm-2" type="text" placeholder="Search">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
 </form>
-
 <br >
 <table id="professorThemesTable" class="table table-hover">
   <thead>
