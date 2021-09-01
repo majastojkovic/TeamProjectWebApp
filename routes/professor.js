@@ -157,14 +157,14 @@ if(filterBy== null || wantedItem == "")
       });
         Theme.find(function(err, themes) {
       Professor.find(function(err, professors){
-   Team.findOne({ name: req.user.teamName }, function(err, team) {
-   res.render('studentdashboard', {
-         errors,
-         student: req.user,
-         themes: themes,
-         team: team,
-         professors: professors
-        });
+        Team.findOne({ name: req.user.teamName }, function(err, team) {
+          res.render('studentdashboard', {
+            errors,
+            student: req.user,
+            themes: themes,
+            team: team,
+            professors: professors
+          });
         });
       });
     });
@@ -177,7 +177,6 @@ else
       let filteredThemes =[];
     Theme.find(function(err, themes) {
         console.log(wantedItem);
-
           themes.forEach(function(theme){
             if(theme.title.includes(wantedItem))
              {
@@ -185,34 +184,78 @@ else
              }
           });
         });
+
         if(req.user.role=="professor")
         {
-          console.log(filteredThemes);
-     Professor.find(function(err, professors){
-            res.render('professordashboard', {
-                professor: req.user,
-                professors: professors,
-                themes: filteredThemes
-            });
+          Professor.find(function(err, professors){
+
+            if (filteredThemes.length == 0) {
+              console.log("Tema ne postoji");
+              let errors = [];
+              errors.push({ msg: "Selected theme doesn't exists." });
+
+              Theme.find(function(err, themes) {
+                res.render('professordashboard', {
+                      errors,
+                      professor: req.user,
+                      themes: themes,
+                      professors: professors
+
+                  });
+              });
+
+
+            } else {
+              res.render('professordashboard', {
+                  professor: req.user,
+                  professors: professors,
+                  themes: filteredThemes
+              });
+            }
+
           });
-        }
-        else
-        {
+
+        } else {
+
           Professor.find(function(err, professors){
           Team.findOne({ name: req.user.teamName }, function(err, team) {
-          res.render('studentdashboard', {
-                student: req.user,
-                themes: filteredThemes,
-                team: team,
-                professors:professors
-            });
+
+            if (filteredThemes.length == 0) {
+              console.log("Tema ne postoji");
+              let errors = [];
+              errors.push({ msg: "Selected theme doesn't exists." });
+
+
+              Theme.find(function(err, themes) {
+                res.render('studentdashboard', {
+                      errors,
+                      student: req.user,
+                      themes: themes,
+                      professors: professors
+
+                  });
+              });
+
+            }
+            else {
+              console.log("Tema postoji");
+              res.render('studentdashboard', {
+                    student: req.user,
+                    themes: filteredThemes,
+                    team: team,
+                    professors:professors
+                });
+            }
+
+
           });
         });
+
         }
     }
     else if(filterBy.includes("professor"))
     {
-        console.log(wantedItem);
+        // console.log(wantedItem);
         let filteredThemesProf =[];
         Professor.findOne({ name: wantedItem }, function(err, professor) {
           if(professor){
@@ -229,7 +272,6 @@ else
             });
             if(req.user.role=="professor")
             {
-            console.log(filteredThemesProf);
             Professor.find(function(err, professors){
                    res.render('professordashboard', {
                        professor: req.user,
