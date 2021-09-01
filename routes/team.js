@@ -149,4 +149,23 @@ router.post('/createTeam',  ensureAuthenticatedStudent,(req, res, err) => {
     });
   }
 });
+
+router.get('/:name?', ensureAuthenticated, (req, res) => {
+
+    Team.findOne({ name: req.params.name }, function(err, team) {
+
+      Student.find({ teamName: team.name }, function(err, students) {
+
+        res.render('team', {
+              user: req.user,
+              team: team,
+              students: students
+        });
+
+      });
+
+    });
+
+});
+
 module.exports = router;

@@ -77,8 +77,8 @@
 
                   <% teams.forEach(function(team) { %>
                     <div class="form-check">
-                      <input type="radio" class="form-check-input" name="checkedTeam" value="<%= team.name %>,<%= theme.title %>">
-                      <label class="form-check-label" for="flexCheckDefault"><%= team.name %></label>
+                      <input type="radio" class="form-check-input" name="checkedTeam" value="<%= team.name %>">
+                      <label class="form-check-label" for="flexCheckDefault"><a href="/team/<%= team.name %>"><%= team.name %></a></label>
                     </div>
                   <% }); %>
 
